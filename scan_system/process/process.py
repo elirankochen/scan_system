@@ -1,12 +1,8 @@
-# from flask import Flask
+
 import redis
 import json
 import time
-# import threading
 
-
-# HOST = '0.0.0.0'
-# app = Flask(__name__)
 redis = redis.Redis(host='redis', port=6379)
 
 
@@ -31,10 +27,6 @@ def process_scanner_requests():
             save_scanner_status(first_scan_object, scanner_status)
 
 
-# t1 = threading.Thread(target=process_scanner_requests)
-# t1.start()
-
-
 def save_scanner_status(scan_item, status):
     redis.sadd('success_tasks', scan_item['scan_id']) if status == StatusEnum.COMPLETE \
         else redis.sadd('failed_tasks', scan_item['scan_id'])
@@ -44,8 +36,6 @@ def run_scanner(scan_item):
     return StatusEnum.ERROR if 'www' not in scan_item['target_domain'] else StatusEnum.COMPLETE
 
 
-
 if __name__ == '__main__':
-    # app.run(HOST, debug=True)
     process_scanner_requests()
 
